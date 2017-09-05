@@ -1,4 +1,4 @@
-//
+ //
 //  ViewController.swift
 //  Shopify-Mobile-Dev-Intern
 //
@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Stevia
 
 class ViewController: UIViewController {
   
@@ -51,10 +52,36 @@ class ViewController: UIViewController {
           moneySpent = moneySpent + Double(order["total_price"] as! String)!
         }
         
-        
       }
+      
+      OperationQueue.main.addOperation({ 
+        self.setupLabels(totalMoneySpent: "\(moneySpent)", totalBronzeBags: "\(totalBronzeBags)")
+      })
     }
-    
   }
   
+  func setupLabels(totalMoneySpent:String, totalBronzeBags:String)
+  {
+    
+    let dollarsSpentLabel = UILabel()
+    dollarsSpentLabel.text = String(format:"CAD spent by Napoleon Batz: $%@", totalMoneySpent)
+    dollarsSpentLabel.style(labelStyle)
+    let bronzeBagsPurchasedLabel = UILabel()
+    bronzeBagsPurchasedLabel.text = String(format:"Total Awesome Bronze Bags purchased: %@", totalBronzeBags)
+    bronzeBagsPurchasedLabel.style(labelStyle)
+    
+    view.sv([dollarsSpentLabel, bronzeBagsPurchasedLabel])
+    
+    view.layout(
+      |-15-dollarsSpentLabel.centerVertically(-30)-15-|,
+      |-15-bronzeBagsPurchasedLabel.centerVertically(30)-15-|
+    )
+  }
+  
+  func labelStyle(label: UILabel)
+  {
+    label.adjustsFontSizeToFitWidth = true
+    label.textAlignment = .center
+    label.sizeToFit()
+  }
 }
