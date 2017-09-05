@@ -24,9 +24,24 @@ class ViewController: UIViewController {
       let orders = data["orders"] as! [[String:AnyObject]]
       
       var moneySpent = 0.0
+      var totalBronzeBags = 0
       for order in orders
       {
+        //Check all items purchased
+        let itemsPurchased = order["line_items"] as! [[String:AnyObject]]
+        
+        for item in itemsPurchased
+        {
+          if item["title"] as! String == "Awesome Bronze Bag"
+          {
+            totalBronzeBags = totalBronzeBags + (item["quantity"] as! Int)
+          }
+        }
+        
+        //Check for Customer Data
         guard order["customer"] != nil else { continue }
+        
+        // Search for customer using fullname
         let customerFirstName = (order["customer"] as! [String:AnyObject])["first_name"] as! String
         let customerLastName = (order["customer"] as! [String:AnyObject])["last_name"] as! String
         let customerFullName = String(format:"%@ %@", customerFirstName, customerLastName)
@@ -36,8 +51,8 @@ class ViewController: UIViewController {
           moneySpent = moneySpent + Double(order["total_price"] as! String)!
         }
         
+        
       }
-//      print(orders)
     }
     
   }
